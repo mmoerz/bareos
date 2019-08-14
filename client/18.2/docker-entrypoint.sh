@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# MAINTAINER Barcus <barcus@tou.nu>
+# MAINTAINER Michael Moerz <michael@moerz.co.at> 
 
 if [ ! -f /etc/bareos/bareos-fd-config.control ]
   then

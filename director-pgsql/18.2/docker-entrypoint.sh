@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# MAINTAINER Barcus <barcus@tou.nu>
+# MAINTAINER Michael Moerz <michael@moerz.co.at>
 
 if [ ! -f /etc/bareos/bareos-dir-config.control ]
   then
@@ -9,13 +9,13 @@ if [ ! -f /etc/bareos/bareos-dir-config.control ]
   # Download default admin profile config
   if [ ! -f /etc/bareos/bareos-dir.d/profile/webui-admin.conf ]
     then
-    curl --silent --insecure https://raw.githubusercontent.com/bareos/bareos-webui/master/install/bareos/bareos-dir.d/profile/webui-admin.conf --output /etc/bareos/bareos-dir.d/profile/webui-admin.conf
+    curl --silent --insecure https://raw.githubusercontent.com/bareos/bareos/master/webui//install/bareos/bareos-dir.d/profile/webui-admin.conf --output /etc/bareos/bareos-dir.d/profile/webui-admin.conf
   fi
 
   # Download default webUI config
   if [ ! -f /etc/bareos/bareos-dir.d/console/admin.conf ]
     then
-    curl --silent --insecure https://raw.githubusercontent.com/bareos/bareos-webui/master/install/bareos/bareos-dir.d/console/admin.conf.example --output /etc/bareos/bareos-dir.d/console/admin.conf
+    curl --silent --insecure https://raw.githubusercontent.com/bareos/bareos/master/webui//install/bareos/bareos-dir.d/console/admin.conf.example --output /etc/bareos/bareos-dir.d/console/admin.conf
   fi
 
   # Update bareos-director configs
@@ -37,6 +37,7 @@ if [ ! -f /etc/bareos/bareos-dir-config.control ]
   sed -i "s#}#  TlsEnable = false\n}#" /etc/bareos/bareos-dir.d/console/admin.conf
 
   # Control file
+<<<<<<< HEAD
   touch /etc/bareos/bareos-dir-config.control
 fi
 
@@ -44,6 +45,16 @@ if [ ! -f /etc/bareos/bareos-dir-db.control ]
   then
     sleep 15
     # init Postgres DB
+=======
+  touch /etc/bareos/bareos-config.control
+fi
+
+if [ ! -f /etc/bareos/bareos-db.control ]
+  then
+    # TODO waiting Postgres is up
+    sleep 15
+    # Iinit Postgres DB
+>>>>>>> 9804632fa15cf5c441e52bbf41758bcc9872cec5
     export PGUSER=postgres
     export PGHOST=${DB_HOST}
     export PGPASSWORD=${DB_PASSWORD}
@@ -54,17 +65,28 @@ if [ ! -f /etc/bareos/bareos-dir-db.control ]
     /usr/lib/bareos/scripts/grant_bareos_privileges
 
     # Control file
+<<<<<<< HEAD
     touch /etc/bareos/bareos-dir-db.control
 elif [ ! -f /etc/bareos/bareos-dir-db.update ]
   then
+=======
+    touch /etc/bareos/bareos-db.control
+  else
+>>>>>>> 9804632fa15cf5c441e52bbf41758bcc9872cec5
     # Try Postgres upgrade
     export PGUSER=postgres
     export PGHOST=${DB_HOST}
     export PGPASSWORD=${DB_PASSWORD}
     /usr/lib/bareos/scripts/update_bareos_tables
     /usr/lib/bareos/scripts/grant_bareos_privileges
+<<<<<<< HEAD
     touch /etc/bareos/bareos-dir-db.update
 fi
 
+=======
+fi
+
+
+>>>>>>> 9804632fa15cf5c441e52bbf41758bcc9872cec5
 find /etc/bareos/bareos-dir.d ! -user bareos -exec chown bareos {} \;
 exec "$@"

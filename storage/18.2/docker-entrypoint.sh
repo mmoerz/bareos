@@ -2,8 +2,7 @@
 
 # MAINTAINER Barcus <barcus@tou.nu>
 
-if [ ! -f /etc/bareos/bareos-sd-config.control ]
-  then
+if [ ! -f /etc/bareos/bareos-sd-config.control ]; then
   tar xfvz /bareos-sd.tgz
 
   # Update bareos-storage configs

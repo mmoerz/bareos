@@ -1,4 +1,6 @@
 # BareOS director Dockerfile
+# forked from https://github.com/barcus/bareos
+
 FROM       library/debian:stable
 MAINTAINER Michael Moerz <michael@moerz.co.at>
 
@@ -15,8 +17,8 @@ RUN curl -Ls https://download.bareos.org/bareos/release/17.2/Debian_9.0/Release.
     echo 'bareos-database-common bareos-database-common/missing-db-package-error select ignore' | debconf-set-selections && \
     echo 'postfix postfix/main_mailer_type select No configuration' | debconf-set-selections && \
     apt-get update -qq && \
-    apt-get install -qq -y bareos bareos-database-mysql mysql-client && \
-    apt-get clean
+    apt-get install -qq -y bareos bareos-database-mysql mysql-client bareos-tools && \
+    apt-clean
 
 COPY docker-entrypoint.sh /
 RUN chmod u+x /docker-entrypoint.sh

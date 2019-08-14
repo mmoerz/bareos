@@ -1,4 +1,5 @@
 # BareOS director Dockerfile
+# forked from https://github.com/barcus/bareos
 
 FROM       library/debian:stable
 MAINTAINER Michael Moerz michael@moerz.co.at 
