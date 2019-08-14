@@ -1,0 +1,75 @@
+version: '3.3'
+
+services:
+
+  smtpd:
+    container_name: smtpd
+    image: namshi/smtp
+    environment:
+      - SMARTHOST_ADDRESS=w00c1a2b.kasserver.com
+      - SMARTHOST_PORT=587
+      - SMARTHOST_USER=bareos@ordendesfeuers.at
+      - SMARTHOST_PASSWORD=KRaBNGAXfDQHXT83
+      - SMARTHOST_ALIASES=*.ordendesfeuers.at
+          
+  bareos-db:
+    image: postgres:9.3
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: I345baGS3%fag36df3
+      # No username for pg, needs to be default (postgres)
+    volumes:
+      - /srv/bareos/postgresql/data:/var/lib/postgresql/data
+      # ^^ thats the dir on the host running the dock    ||
+      #    and that's the path inside the container      ^^
+
+  bareos-dir:
+    build: director-pgsql/17.2
+    image: bareos-dir:17.2
+    ports:
+      - 9101:9101
+    environment:
+      DB_PASSWORD: I345baGS3%fag36df3
+      DB_HOST: bareos-db
+      DB_PORT: 3306
+      BAREOS_FD_HOST: bareos-fd
+      BAREOS_SD_HOST: bareos-sd
+      BAREOS_FD_PASSWORD: ?2DgEBZT3dg6265g3_
+      BAREOS_SD_PASSWORD: ^3sfa6zrxASFv2423ASDF@
+      BAREOS_WEBUI_PASSWORD: IchamAdminjetzt
+      SMTP_HOST: smtpd
+      ADMIN_MAIL: michael@natoka.de
+    volumes:
+      - /srv/bareos/etc/bareos:/etc/bareos
+    depends_on:
+      - bareos-db
+
+  bareos-sd:
+    build: storage/17.2
+    image: bareos-sd:17.2
+    ports:
+      - 9103:9103
+    environment:
+      - BAREOS_SD_PASSWORD=^3sfa6zrxASFv2423ASDF@
+    volumes:
+      - /srv/bareos/etc/bareos:/etc/bareos
+      - /srv/bareos/storage:/var/lib/bareos/storage
+
+  bareos-fd:
+    build: client/17.2
+    image: bareos-fd:17.2
+    environment:
+      - BAREOS_FD_PASSWORD=?2DgEBZT3dg6265g3_
+    volumes:
+      - /srv/bareos/etc/bareos:/etc/bareos
+
+  bareos-webui:
+    build: webui/17.2
+    image: bareos-webui:17.2
+    ports:
+      - 8080:80
+    environment:
+      - BAREOS_DIR_HOST=bareos-dir
+    volumes:
+      - /srv/bareos/etc/bareos-webui:/etc/bareos-webui
+
