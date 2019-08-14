@@ -2,7 +2,7 @@
 
 # MAINTAINER Barcus <barcus@tou.nu>
 
-if [ ! -f /etc/bareos/bareos-config.control ]
+if [ ! -f /etc/bareos/bareos-sd-config.control ]
   then
   tar xfvz /bareos-sd.tgz
 
@@ -14,7 +14,7 @@ if [ ! -f /etc/bareos/bareos-config.control ]
   chown -R bareos /etc/bareos/*
 
   # Control file
-  touch /etc/bareos/bareos-config.control
+  touch /etc/bareos/bareos-sd-config.control
 fi
 
 find /etc/bareos/bareos-sd.d ! -user bareos -exec chown bareos {} \;

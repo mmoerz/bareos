@@ -2,7 +2,7 @@
 
 # MAINTAINER Barcus <barcus@tou.nu>
 
-if [ ! -f /etc/bareos/bareos-config.control ]
+if [ ! -f /etc/bareos/bareos-dir-config.control ]
   then
   tar xfvz /bareos-dir.tgz
 
@@ -36,13 +36,13 @@ if [ ! -f /etc/bareos/bareos-config.control ]
   sed -i "s#Password = .*#Password = \"${BAREOS_WEBUI_PASSWORD}\"#" /etc/bareos/bareos-dir.d/console/admin.conf
 
   # Control file
-  touch /etc/bareos/bareos-config.control
+  touch /etc/bareos/bareos-dir-config.control
 fi
 
-if [ ! -f /etc/bareos/bareos-db.control ]
+if [ ! -f /etc/bareos/bareos-dir-db.control ]
   then
     sleep 15
-    # Iinit Postgres DB
+    # init Postgres DB
     export PGUSER=postgres
     export PGHOST=${DB_HOST}
     export PGPASSWORD=${DB_PASSWORD}
@@ -53,14 +53,16 @@ if [ ! -f /etc/bareos/bareos-db.control ]
     /usr/lib/bareos/scripts/grant_bareos_privileges
 
     # Control file
-    touch /etc/bareos/bareos-db.control
-  else
+    touch /etc/bareos/bareos-dir-db.control
+elif [ ! -f /etc/bareos/bareos-dir-db.update ]
+  then
     # Try Postgres upgrade
     export PGUSER=postgres
     export PGHOST=${DB_HOST}
     export PGPASSWORD=${DB_PASSWORD}
     /usr/lib/bareos/scripts/update_bareos_tables
     /usr/lib/bareos/scripts/grant_bareos_privileges
+    touch /etc/bareos/bareos-dir-db.update
 fi
 
 find /etc/bareos/bareos-dir.d ! -user bareos -exec chown bareos {} \;
